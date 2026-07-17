@@ -1,0 +1,56 @@
+American Auto Parts Store – Full-Stack Web Application
+
+Build a fully responsive, modern e-commerce platform for an American auto parts retailer. The app targets both DIY customers and B2B clients (workshops, fleets, dealers) with a professional, dark-themed UI accented in red and blue.
+
+Core User Features
+
+Home: Hero with truck/SUV imagery, brand showcase (Ford, Chevrolet, GMC, Jeep), featured products, promotions, testimonials, and CTAs.
+
+Catalog: Products organized by brand & category (engine, brakes, suspension, etc.). Each product includes images, SKU, compatibility, price, availability, specs, manufacturer, warranty, ratings & reviews. Advanced filtering (brand, category, price), search, sorting, and pagination.
+
+Product Detail: Image gallery with zoom, specs, compatibility, reviews (rate/write, upload photos, like), Q&A, add-to-cart/quote/wishlist.
+
+Vehicle Compatibility Finder: Search by brand, year, model, engine, trim to show only compatible parts.
+
+Cart & Checkout: Add/remove items, update quantities, apply coupons, estimate shipping; collect customer/shipping/billing info, delivery/payment methods; order confirmation page.
+
+Quote Request: Multi-product quotes with VIN entry, part description, photo upload; receive confirmation.
+
+Bulk Orders: Dedicated form for businesses (workshops, dealers, fleets) requesting large quantities – includes business info, product list, quantities, delivery notes.
+
+Wishlist & Order Tracking: Save items; track orders by number and view history.
+
+User Accounts: Registration, login, password reset, profile management, saved addresses, wishlist, order history, saved vehicles.
+
+Contact & FAQ: Form, phone, email, WhatsApp, map, hours; FAQ covering shipping, returns, warranty, compatibility, payments, installation.
+
+Admin Dashboard
+Manage products (CRUD, inventory, prices, images), categories, brands, orders, quotes, bulk orders, reviews, customer accounts; view analytics, sales reports, low-stock alerts.
+
+Design & UX
+
+Fully responsive (desktop/tablet/mobile)
+
+Smooth animations, loading states, dark/light modes
+
+Professional typography, breadcrumbs, sticky nav, floating WhatsApp
+
+WCAG accessibility standards
+
+Tech Stack
+
+React + TypeScript
+
+Tailwind CSS
+
+Component-based architecture with reusable UI
+
+Client-side routing, form validation, search/filter/sort/pagination
+
+Local storage (cart, wishlist)
+
+Mock backend with realistic sample data
+
+SEO-friendly metadata
+
+Deliver clean, modular, well-documented code ready for future production scaling.

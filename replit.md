@@ -1,45 +1,59 @@
-# [Project name]
+# AllAmerican Auto Parts Store
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+Full-stack American auto parts e-commerce platform — dark patriotic industrial theme, targeting Ford/Chevrolet/GMC/Jeep/Dodge owners.
 
-## Run & Operate
+## Architecture
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
-- `pnpm run typecheck` — full typecheck across all packages
-- `pnpm run build` — typecheck + build all packages
-- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+**Monorepo** (pnpm workspaces):
 
-## Stack
+| Package | Path | Purpose |
+|---------|------|---------|
+| `@workspace/auto-parts-store` | `artifacts/auto-parts-store` | React + Vite storefront |
+| `@workspace/api-server` | `artifacts/api-server` | Express API server |
+| `@workspace/db` | `lib/db` | Drizzle ORM + PostgreSQL schema |
+| `@workspace/api-client-react` | `lib/api-client-react` | Orval-generated React Query hooks |
+| `@workspace/api-zod` | `lib/api-zod` | Orval-generated Zod schemas |
 
-- pnpm workspaces, Node.js 24, TypeScript 5.9
-- API: Express 5
-- DB: PostgreSQL + Drizzle ORM
-- Validation: Zod (`zod/v4`), `drizzle-zod`
-- API codegen: Orval (from OpenAPI spec)
-- Build: esbuild (CJS bundle)
+**Routing**: Replit proxy routes `/*` → Vite (port 22045) and `/api/*` → Express (port 8080). The generated API client URLs already include the `/api` prefix — do NOT call `setBaseUrl()`.
 
-## Where things live
+## Key Decisions
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- **Cart/wishlist**: Session-based (anonymous cookie `session_id`), no auth required.
+- **Auth**: SHA-256 hash, token format `token_<userId>`. Token stored in localStorage.
+- **Vehicle data**: Hardcoded in-memory in the vehicles route (Ford, Chevrolet, GMC, Jeep, Dodge).
+- **Wouter routing**: Flat `<Switch>` (no nested Switch inside Route) to avoid wouter v3 path scoping issues.
+- **API client**: Generated API paths already include `/api` prefix. Do not use `setBaseUrl`.
 
-## Architecture decisions
+## Tech Stack
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- **Frontend**: React 18, Vite 7, Tailwind CSS v4, Framer Motion, wouter v3, TanStack Query v5
+- **Backend**: Express, Drizzle ORM, PostgreSQL
+- **Design**: Oswald (headings) + Barlow (body), dark zinc theme, American Red (#b91c1c) + Steel Blue accents
 
-## Product
+## Seed Data
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+Database is pre-seeded with:
+- 8 categories, 5 brands (Ford, Chevrolet, GMC, Jeep, Dodge)
+- 30 products across all categories
+- 18 reviews, 5 users (admin@allamerican.com / password123 is admin)
+- 5 sample orders
 
-## User preferences
+## Development
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+```bash
+# Start both services
+pnpm --filter @workspace/auto-parts-store run dev  # port 22045
+pnpm --filter @workspace/api-server run dev         # port 8080
 
-## Gotchas
+# Regenerate API client after spec changes
+cd lib/api-spec && pnpm run generate
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+# Push schema changes
+cd lib/db && pnpm exec drizzle-kit push
+```
 
-## Pointers
+## User Preferences
 
-- See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details
+- Keep the "Patriotic Industrial Muscle" design aesthetic
+- Oswald for all headings (uppercase, tracking-wider)
+- Dark zinc default, American Red primary, Steel Blue secondary

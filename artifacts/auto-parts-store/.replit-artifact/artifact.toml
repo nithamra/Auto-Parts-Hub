@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "American Auto Parts Store"
+version = "1.0.0"
+id = "artifacts/auto-parts-store"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22045
+
+[services.development]
+run = "pnpm --filter @workspace/auto-parts-store run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/auto-parts-store", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/auto-parts-store/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22045"
+BASE_PATH = "/"
