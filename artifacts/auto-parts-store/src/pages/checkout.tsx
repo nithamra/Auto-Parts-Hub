@@ -12,6 +12,11 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { ShieldCheck, CreditCard, ArrowLeft, CheckCircle2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useT } from "@/lib/language-context";
+import { formatPrice } from "@/lib/format-price";
+
+const FREE_SHIPPING_THRESHOLD = 500;
+const SHIPPING_COST = 35;
+const TAX_RATE = 0.15; // Saudi VAT 15%
 
 const checkoutSchema = z.object({
   firstName: z.string().min(2, "First name is required"),
@@ -21,7 +26,7 @@ const checkoutSchema = z.object({
   street: z.string().min(5, "Street address is required"),
   city: z.string().min(2, "City is required"),
   state: z.string().min(2, "State is required"),
-  zip: z.string().min(5, "ZIP is required"),
+  zip: z.string().min(4, "ZIP is required"),
   cardNumber: z.string().min(16, "Valid card number required"),
   expDate: z.string().regex(/^(0[1-9]|1[0-2])\/?([0-9]{2})$/, "MM/YY format required"),
   cvv: z.string().min(3, "CVV required"),
@@ -53,8 +58,8 @@ export default function CheckoutPage() {
     if (!isSuccess) { setLocation("/cart"); return null; }
   }
 
-  const shipping = cart ? (cart.subtotal > 150 ? 0 : 15.99) : 0;
-  const tax = cart ? cart.subtotal * 0.08 : 0;
+  const shipping = cart ? (cart.subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST) : 0;
+  const tax = cart ? cart.subtotal * TAX_RATE : 0;
   const total = cart ? cart.subtotal + shipping + tax : 0;
 
   const onSubmit = (data: CheckoutValues) => {
@@ -101,7 +106,7 @@ export default function CheckoutPage() {
           </div>
           <div className="flex justify-between py-2">
             <span className="text-muted-foreground">{t.checkout.totalPaid}</span>
-            <span className="font-mono font-bold">${total.toFixed(2)}</span>
+            <span className="font-mono font-bold">{formatPrice(total)}</span>
           </div>
         </div>
 
@@ -157,7 +162,7 @@ export default function CheckoutPage() {
                   <FormField control={form.control} name="phone" render={({ field }) => (
                     <FormItem className="sm:col-span-2">
                       <FormLabel>{t.checkout.phoneNumber}</FormLabel>
-                      <FormControl><Input type="tel" {...field} /></FormControl>
+                      <FormControl><Input type="tel" placeholder="+966 5X XXX XXXX" {...field} /></FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
@@ -178,21 +183,21 @@ export default function CheckoutPage() {
                   <FormField control={form.control} name="city" render={({ field }) => (
                     <FormItem className="sm:col-span-3">
                       <FormLabel>{t.checkout.city}</FormLabel>
-                      <FormControl><Input {...field} /></FormControl>
+                      <FormControl><Input placeholder="Riyadh" {...field} /></FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
                   <FormField control={form.control} name="state" render={({ field }) => (
                     <FormItem className="sm:col-span-1">
                       <FormLabel>{t.checkout.state}</FormLabel>
-                      <FormControl><Input {...field} maxLength={2} placeholder="TX" /></FormControl>
+                      <FormControl><Input placeholder="RUH" {...field} /></FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
                   <FormField control={form.control} name="zip" render={({ field }) => (
                     <FormItem className="sm:col-span-2">
                       <FormLabel>{t.checkout.zipCode}</FormLabel>
-                      <FormControl><Input {...field} /></FormControl>
+                      <FormControl><Input placeholder="11461" {...field} /></FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
@@ -249,7 +254,7 @@ export default function CheckoutPage() {
                     <p className="text-zinc-400">{t.checkout.qty} {item.quantity}</p>
                   </div>
                   <div className="font-mono font-medium shrink-0">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    {formatPrice(item.price * item.quantity)}
                   </div>
                 </div>
               ))}
@@ -260,15 +265,15 @@ export default function CheckoutPage() {
             <div className="space-y-2 mb-6 text-sm">
               <div className="flex justify-between">
                 <span className="text-zinc-400">{t.checkout.subtotal}</span>
-                <span className="font-mono">${cart?.subtotal.toFixed(2)}</span>
+                <span className="font-mono">{formatPrice(cart?.subtotal ?? 0)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-zinc-400">{t.checkout.shipping}</span>
-                <span className="font-mono">{shipping === 0 ? t.checkout.free : `$${shipping.toFixed(2)}`}</span>
+                <span className="font-mono">{shipping === 0 ? t.checkout.free : formatPrice(shipping)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-zinc-400">{t.checkout.tax}</span>
-                <span className="font-mono">${tax.toFixed(2)}</span>
+                <span className="text-zinc-400">{t.checkout.tax} (15% VAT)</span>
+                <span className="font-mono">{formatPrice(tax)}</span>
               </div>
             </div>
             
@@ -276,7 +281,7 @@ export default function CheckoutPage() {
             
             <div className="flex justify-between items-end mb-8">
               <span className="font-display font-bold uppercase tracking-wider text-white">{t.checkout.total}</span>
-              <span className="text-3xl font-mono font-bold text-primary">${total.toFixed(2)}</span>
+              <span className="text-3xl font-mono font-bold text-primary">{formatPrice(total)}</span>
             </div>
             
             <Button 

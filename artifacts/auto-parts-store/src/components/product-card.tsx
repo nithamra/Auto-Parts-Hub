@@ -8,6 +8,7 @@ import { useAddToCart, getGetCartQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { useT } from "@/lib/language-context";
+import { formatPrice } from "@/lib/format-price";
 
 export function ProductCard({ product }: { product: Product }) {
   const t = useT();
@@ -72,11 +73,11 @@ export function ProductCard({ product }: { product: Product }) {
           <div className="flex items-end justify-between mt-auto pt-4">
             <div>
               <p className="font-mono text-xl font-bold text-foreground">
-                ${product.price.toFixed(2)}
+                {formatPrice(product.price)}
               </p>
               {product.compareAtPrice && product.compareAtPrice > product.price && (
                 <p className="font-mono text-sm text-muted-foreground line-through">
-                  ${product.compareAtPrice.toFixed(2)}
+                  {formatPrice(product.compareAtPrice)}
                 </p>
               )}
             </div>

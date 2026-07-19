@@ -7,6 +7,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { motion, AnimatePresence } from "framer-motion";
 import { useT } from "@/lib/language-context";
+import { formatPrice } from "@/lib/format-price";
+
+const FREE_SHIPPING_THRESHOLD = 500;
+const SHIPPING_COST = 35;
+const TAX_RATE = 0.15; // Saudi VAT
 
 export default function CartPage() {
   const t = useT();
@@ -69,8 +74,8 @@ export default function CartPage() {
     );
   }
 
-  const shipping = cart.subtotal > 150 ? 0 : 15.99;
-  const tax = cart.subtotal * 0.08;
+  const shipping = cart.subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+  const tax = cart.subtotal * TAX_RATE;
   const total = cart.subtotal + shipping + tax;
 
   return (
@@ -115,7 +120,7 @@ export default function CartPage() {
                             {item.name}
                           </Link>
                           <p className="text-sm font-mono text-muted-foreground mb-2">{t.cart.skuLabel} {item.sku}</p>
-                          <p className="font-mono font-bold text-primary sm:hidden">${item.price.toFixed(2)}</p>
+                          <p className="font-mono font-bold text-primary sm:hidden">{formatPrice(item.price)}</p>
                         </div>
                       </div>
                       
@@ -141,7 +146,7 @@ export default function CartPage() {
                       </div>
                       
                       <div className="hidden sm:block sm:col-span-2 text-end font-mono font-bold text-lg">
-                        ${(item.price * item.quantity).toFixed(2)}
+                        {formatPrice(item.price * item.quantity)}
                       </div>
                       
                       <div className="sm:col-span-1 text-end mt-4 sm:mt-0">
@@ -172,17 +177,19 @@ export default function CartPage() {
             <div className="space-y-4 mb-6 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">{t.cart.subtotal(cart.itemCount)}</span>
-                <span className="font-mono font-medium">${cart.subtotal.toFixed(2)}</span>
+                <span className="font-mono font-medium">{formatPrice(cart.subtotal)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">{t.cart.estimatedShipping}</span>
                 <span className="font-mono font-medium">
-                  {shipping === 0 ? <span className="text-emerald-500">{t.cart.free}</span> : `$${shipping.toFixed(2)}`}
+                  {shipping === 0
+                    ? <span className="text-emerald-500">{t.cart.free}</span>
+                    : formatPrice(shipping)}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">{t.cart.estimatedTax}</span>
-                <span className="font-mono font-medium">${tax.toFixed(2)}</span>
+                <span className="text-muted-foreground">{t.cart.estimatedTax} (15% VAT)</span>
+                <span className="font-mono font-medium">{formatPrice(tax)}</span>
               </div>
             </div>
             
@@ -190,7 +197,7 @@ export default function CartPage() {
             
             <div className="flex justify-between items-end mb-8">
               <span className="font-display font-bold uppercase tracking-wider">{t.cart.orderTotal}</span>
-              <span className="text-3xl font-mono font-bold text-primary">${total.toFixed(2)}</span>
+              <span className="text-3xl font-mono font-bold text-primary">{formatPrice(total)}</span>
             </div>
             
             <Link href="/checkout">
@@ -199,7 +206,7 @@ export default function CartPage() {
               </Button>
             </Link>
             
-            <p className="text-xs text-center text-muted-foreground mt-4 flex items-center justify-center gap-1">
+            <p className="text-xs text-center text-muted-foreground mt-4">
               {t.cart.secureNote}
             </p>
           </div>

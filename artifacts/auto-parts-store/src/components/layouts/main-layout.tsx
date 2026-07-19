@@ -112,16 +112,16 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li><Link href="/vehicle-finder" className="hover:text-primary">{t.footer.vehicleFitment}</Link></li>
                 <li><Link href="/orders" className="hover:text-primary">{t.footer.trackOrder}</Link></li>
-                <li><Link href="#" className="hover:text-primary">{t.footer.returnsWarranty}</Link></li>
-                <li><Link href="#" className="hover:text-primary">{t.footer.contactUs}</Link></li>
+                <li><Link href="/contact" className="hover:text-primary">{t.footer.returnsWarranty}</Link></li>
+                <li><Link href="/contact" className="hover:text-primary">{t.footer.contactUs}</Link></li>
               </ul>
             </div>
 
             <div>
               <h4 className="font-display font-bold uppercase tracking-wider mb-4">{t.footer.company}</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="#" className="hover:text-primary">{t.footer.aboutUs}</Link></li>
-                <li><Link href="#" className="hover:text-primary">{t.footer.careers}</Link></li>
+                <li><Link href="/about" className="hover:text-primary">{t.footer.aboutUs}</Link></li>
+                <li><Link href="/about" className="hover:text-primary">{t.footer.careers}</Link></li>
                 <li><Link href="/admin" className="hover:text-primary">{t.footer.adminLogin}</Link></li>
               </ul>
             </div>

@@ -22,6 +22,8 @@ import OrdersPage from '@/pages/orders';
 import OrderDetailPage from '@/pages/order-detail';
 import WishlistPage from '@/pages/wishlist';
 import AccountPage from '@/pages/account';
+import AboutPage from '@/pages/about';
+import ContactPage from '@/pages/contact';
 
 // Admin Pages
 import AdminDashboard from '@/pages/admin/dashboard';
@@ -74,6 +76,14 @@ function Router() {
       </Route>
       <Route path="/admin">
         <AdminLayout><AdminDashboard /></AdminLayout>
+      </Route>
+
+      {/* Info pages */}
+      <Route path="/about">
+        <MainLayout><AboutPage /></MainLayout>
+      </Route>
+      <Route path="/contact">
+        <MainLayout><ContactPage /></MainLayout>
       </Route>
 
       {/* Storefront routes */}
