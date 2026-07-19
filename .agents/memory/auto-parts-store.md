@@ -18,6 +18,11 @@ If lib/api-client-react/src/index.ts has duplicate export * lines, ESM module fa
 **Why:** ESM duplicate named exports fail silently in Vite.
 **How to apply:** Keep index.ts with exactly one export * per module.
 
+## i18n is custom context + dictionary — no library
+LanguageProvider in src/lib/language-context.tsx holds lang ('en'|'ar') + toggleLang; persisted in localStorage. Setting lang sets html[dir] and html[lang] and toggles class lang-ar. getTranslations(lang) / useT() return a typed nested dictionary from src/lib/translations.ts. Dynamic strings are functions (e.g. copyright(year), showing(shown, total)). Cairo font added to index.css for Arabic; letter-spacing zeroed in .lang-ar. No i18n library.
+**Why:** Keeps bundle small; full control over string shape; straightforward for two fixed languages.
+**How to apply:** Add new keys to both en and ar objects in translations.ts. Import useT() in any component that needs translated strings.
+
 ## Catalog filter params must use undefined, not null
 Orval serializes null as the string "null" in query params. parseInt("null") = NaN. PostgreSQL rejects it with "invalid input syntax for type integer: NaN".
 **Why:** undefined values are omitted from query strings; null is not.

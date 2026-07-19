@@ -7,8 +7,10 @@ import { motion } from "framer-motion";
 import { useAddToCart, getGetCartQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
+import { useT } from "@/lib/language-context";
 
 export function ProductCard({ product }: { product: Product }) {
+  const t = useT();
   const addToCart = useAddToCart();
   const queryClient = useQueryClient();
   const { toast } = useToast();
@@ -23,8 +25,8 @@ export function ProductCard({ product }: { product: Product }) {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: getGetCartQueryKey() });
         toast({
-          title: "Added to cart",
-          description: `${product.name} has been added to your cart.`,
+          title: t.productCard.addedToCart,
+          description: t.productCard.addedDesc(product.name),
         });
       }
     });
@@ -38,13 +40,13 @@ export function ProductCard({ product }: { product: Product }) {
       >
         <div className="relative aspect-square bg-muted overflow-hidden flex items-center justify-center p-4">
           {product.stock <= 0 && (
-            <div className="absolute top-2 left-2 z-10">
-              <Badge variant="destructive">Out of Stock</Badge>
+            <div className="absolute top-2 start-2 z-10">
+              <Badge variant="destructive">{t.productCard.outOfStock}</Badge>
             </div>
           )}
           {product.isFeatured && product.stock > 0 && (
-            <div className="absolute top-2 left-2 z-10">
-              <Badge className="bg-secondary text-secondary-foreground hover:bg-secondary">Featured</Badge>
+            <div className="absolute top-2 start-2 z-10">
+              <Badge className="bg-secondary text-secondary-foreground hover:bg-secondary">{t.productCard.featured}</Badge>
             </div>
           )}
           <img 
@@ -87,7 +89,7 @@ export function ProductCard({ product }: { product: Product }) {
               variant={product.stock > 0 ? "default" : "outline"}
             >
               <ShoppingCart className="h-5 w-5" />
-              <span className="sr-only">Add to cart</span>
+              <span className="sr-only">{t.productCard.addToCart}</span>
             </Button>
           </div>
         </div>

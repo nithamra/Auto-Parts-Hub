@@ -1,10 +1,13 @@
 import { Link } from "wouter";
-import { Wrench, ShoppingCart, User, Search, Menu } from "lucide-react";
+import { Wrench, ShoppingCart, User, Search, Menu, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useGetCart, getGetCartQueryKey } from "@workspace/api-client-react";
+import { useLanguage, useT } from "@/lib/language-context";
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const { data: cart } = useGetCart({ query: { queryKey: getGetCartQueryKey() } });
+  const { toggleLang } = useLanguage();
+  const t = useT();
 
   return (
     <div className="min-h-[100dvh] flex flex-col">
@@ -19,13 +22,25 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
             </Link>
             
             <nav className="hidden md:flex gap-6">
-              <Link href="/catalog" className="text-sm font-display tracking-wider uppercase font-medium hover:text-primary transition-colors">Catalog</Link>
-              <Link href="/vehicle-finder" className="text-sm font-display tracking-wider uppercase font-medium hover:text-primary transition-colors">Vehicle Finder</Link>
-              <Link href="/orders" className="text-sm font-display tracking-wider uppercase font-medium hover:text-primary transition-colors">Orders</Link>
+              <Link href="/catalog" className="text-sm font-display tracking-wider uppercase font-medium hover:text-primary transition-colors">{t.nav.catalog}</Link>
+              <Link href="/vehicle-finder" className="text-sm font-display tracking-wider uppercase font-medium hover:text-primary transition-colors">{t.nav.vehicleFinder}</Link>
+              <Link href="/orders" className="text-sm font-display tracking-wider uppercase font-medium hover:text-primary transition-colors">{t.nav.orders}</Link>
             </nav>
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Language toggle */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleLang}
+              className="hidden md:flex items-center gap-1.5 font-display text-xs tracking-wider uppercase font-bold text-muted-foreground hover:text-primary border border-border/60 hover:border-primary/60 px-3 h-8 rounded-sm"
+              aria-label="Switch language"
+            >
+              <Globe className="h-3.5 w-3.5" />
+              {t.nav.switchLang}
+            </Button>
+
             <Link href="/catalog" className="md:hidden">
               <Button variant="ghost" size="icon">
                 <Search className="h-5 w-5" />
@@ -46,6 +61,16 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                 )}
               </Button>
             </Link>
+            {/* Mobile lang toggle */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleLang}
+              className="md:hidden text-muted-foreground hover:text-primary"
+              aria-label="Switch language"
+            >
+              <Globe className="h-5 w-5" />
+            </Button>
             <Button variant="ghost" size="icon" className="md:hidden">
               <Menu className="h-5 w-5" />
             </Button>
@@ -68,41 +93,41 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                 </span>
               </Link>
               <p className="text-sm text-muted-foreground">
-                Rugged, trustworthy parts for Ford, Chevrolet, GMC, and Jeep. Built to last.
+                {t.footer.tagline}
               </p>
             </div>
             
             <div>
-              <h4 className="font-display font-bold uppercase tracking-wider mb-4">Shop</h4>
+              <h4 className="font-display font-bold uppercase tracking-wider mb-4">{t.footer.shop}</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/catalog?brand=ford" className="hover:text-primary">Ford Parts</Link></li>
-                <li><Link href="/catalog?brand=chevrolet" className="hover:text-primary">Chevrolet Parts</Link></li>
-                <li><Link href="/catalog?brand=gmc" className="hover:text-primary">GMC Parts</Link></li>
-                <li><Link href="/catalog?brand=jeep" className="hover:text-primary">Jeep Parts</Link></li>
+                <li><Link href="/catalog?brand=ford" className="hover:text-primary">{t.footer.fordParts}</Link></li>
+                <li><Link href="/catalog?brand=chevrolet" className="hover:text-primary">{t.footer.chevroletParts}</Link></li>
+                <li><Link href="/catalog?brand=gmc" className="hover:text-primary">{t.footer.gmcParts}</Link></li>
+                <li><Link href="/catalog?brand=jeep" className="hover:text-primary">{t.footer.jeepParts}</Link></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-display font-bold uppercase tracking-wider mb-4">Support</h4>
+              <h4 className="font-display font-bold uppercase tracking-wider mb-4">{t.footer.support}</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/vehicle-finder" className="hover:text-primary">Vehicle Fitment</Link></li>
-                <li><Link href="/orders" className="hover:text-primary">Track Order</Link></li>
-                <li><Link href="#" className="hover:text-primary">Returns & Warranty</Link></li>
-                <li><Link href="#" className="hover:text-primary">Contact Us</Link></li>
+                <li><Link href="/vehicle-finder" className="hover:text-primary">{t.footer.vehicleFitment}</Link></li>
+                <li><Link href="/orders" className="hover:text-primary">{t.footer.trackOrder}</Link></li>
+                <li><Link href="#" className="hover:text-primary">{t.footer.returnsWarranty}</Link></li>
+                <li><Link href="#" className="hover:text-primary">{t.footer.contactUs}</Link></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-display font-bold uppercase tracking-wider mb-4">Company</h4>
+              <h4 className="font-display font-bold uppercase tracking-wider mb-4">{t.footer.company}</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="#" className="hover:text-primary">About Us</Link></li>
-                <li><Link href="#" className="hover:text-primary">Careers</Link></li>
-                <li><Link href="/admin" className="hover:text-primary">Admin Login</Link></li>
+                <li><Link href="#" className="hover:text-primary">{t.footer.aboutUs}</Link></li>
+                <li><Link href="#" className="hover:text-primary">{t.footer.careers}</Link></li>
+                <li><Link href="/admin" className="hover:text-primary">{t.footer.adminLogin}</Link></li>
               </ul>
             </div>
           </div>
           <div className="mt-12 pt-8 border-t border-border/40 text-center text-sm text-muted-foreground">
-            <p>&copy; {new Date().getFullYear()} AllAmerican Auto Parts. All rights reserved.</p>
+            <p>{t.footer.copyright(new Date().getFullYear())}</p>
           </div>
         </div>
       </footer>

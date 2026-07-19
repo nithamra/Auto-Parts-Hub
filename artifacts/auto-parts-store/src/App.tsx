@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { ThemeProvider } from '@/components/theme-provider';
+import { LanguageProvider } from '@/lib/language-context';
 import NotFound from '@/pages/not-found';
 import { Route, Switch, Router as WouterRouter } from 'wouter';
 
@@ -61,7 +62,6 @@ class ErrorBoundary extends React.Component<
   }
 }
 
-// Flat router — avoids wouter v3 nested-Switch scoping issues
 function Router() {
   return (
     <Switch>
@@ -120,15 +120,17 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="dark" storageKey="app-theme">
-        <TooltipProvider>
-          <ErrorBoundary>
-            <div className="noise-overlay" />
-            <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
-              <Router />
-            </WouterRouter>
-            <Toaster />
-          </ErrorBoundary>
-        </TooltipProvider>
+        <LanguageProvider>
+          <TooltipProvider>
+            <ErrorBoundary>
+              <div className="noise-overlay" />
+              <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
+                <Router />
+              </WouterRouter>
+              <Toaster />
+            </ErrorBoundary>
+          </TooltipProvider>
+        </LanguageProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

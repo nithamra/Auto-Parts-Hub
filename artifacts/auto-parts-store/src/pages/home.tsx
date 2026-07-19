@@ -5,10 +5,12 @@ import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/product-card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
+import { useT } from "@/lib/language-context";
 
 export default function HomePage() {
   const { data: featuredProducts, isLoading: loadingProducts } = useGetFeaturedProducts();
   const { data: brands, isLoading: loadingBrands } = useListBrands();
+  const t = useT();
 
   return (
     <div className="flex flex-col w-full">
@@ -33,28 +35,28 @@ export default function HomePage() {
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/30 bg-primary/10 text-primary mb-4">
               <ShieldCheck className="w-4 h-4" />
-              <span className="text-xs font-display tracking-widest uppercase font-bold">OEM & Aftermarket Excellence</span>
+              <span className="text-xs font-display tracking-widest uppercase font-bold">{t.home.badge}</span>
             </div>
             
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-extrabold uppercase tracking-tighter text-white drop-shadow-lg">
-              American <br/>
-              <span className="text-primary">Muscle.</span> <br/>
-              Built Right.
+              {t.home.heroLine1} <br/>
+              <span className="text-primary">{t.home.heroLine2}</span> <br/>
+              {t.home.heroLine3}
             </h1>
             
             <p className="text-lg md:text-xl text-zinc-300 font-sans max-w-2xl mx-auto drop-shadow-md">
-              The premier source for Ford, Chevrolet, GMC, and Jeep parts. When the job needs to get done, you need parts you can trust.
+              {t.home.heroSub}
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8 pt-4">
               <Link href="/catalog">
                 <Button size="lg" className="w-full sm:w-auto text-lg h-14 px-8 border-2 border-primary">
-                  Shop Catalog <ArrowRight className="ml-2 w-5 h-5" />
+                  {t.home.shopCatalog} <ArrowRight className="ms-2 w-5 h-5" />
                 </Button>
               </Link>
               <Link href="/vehicle-finder">
                 <Button size="lg" variant="secondary" className="w-full sm:w-auto text-lg h-14 px-8">
-                  Find Your Vehicle <Wrench className="ml-2 w-5 h-5" />
+                  {t.home.findVehicle} <Wrench className="ms-2 w-5 h-5" />
                 </Button>
               </Link>
             </div>
@@ -71,8 +73,8 @@ export default function HomePage() {
                 <ShieldCheck className="h-6 w-6" />
               </div>
               <div>
-                <h4 className="font-display font-bold uppercase tracking-wider">Quality Guaranteed</h4>
-                <p className="text-sm text-muted-foreground">OEM & Premium Aftermarket</p>
+                <h4 className="font-display font-bold uppercase tracking-wider">{t.home.qualityTitle}</h4>
+                <p className="text-sm text-muted-foreground">{t.home.qualitySub}</p>
               </div>
             </div>
             <div className="flex items-center justify-center gap-4 py-4 md:py-0">
@@ -80,8 +82,8 @@ export default function HomePage() {
                 <Truck className="h-6 w-6" />
               </div>
               <div>
-                <h4 className="font-display font-bold uppercase tracking-wider">Fast Shipping</h4>
-                <p className="text-sm text-muted-foreground">Free on orders over $150</p>
+                <h4 className="font-display font-bold uppercase tracking-wider">{t.home.shippingTitle}</h4>
+                <p className="text-sm text-muted-foreground">{t.home.shippingSub}</p>
               </div>
             </div>
             <div className="flex items-center justify-center gap-4 py-4 md:py-0">
@@ -89,8 +91,8 @@ export default function HomePage() {
                 <Wrench className="h-6 w-6" />
               </div>
               <div>
-                <h4 className="font-display font-bold uppercase tracking-wider">Expert Support</h4>
-                <p className="text-sm text-muted-foreground">Talk to real gearheads</p>
+                <h4 className="font-display font-bold uppercase tracking-wider">{t.home.supportTitle}</h4>
+                <p className="text-sm text-muted-foreground">{t.home.supportSub}</p>
               </div>
             </div>
           </div>
@@ -102,7 +104,9 @@ export default function HomePage() {
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-end mb-10">
             <div>
-              <h2 className="text-3xl md:text-4xl font-display font-bold uppercase tracking-wider">Shop By <span className="text-primary">Brand</span></h2>
+              <h2 className="text-3xl md:text-4xl font-display font-bold uppercase tracking-wider">
+                {t.home.shopByBrand} <span className="text-primary">{t.home.brandWord}</span>
+              </h2>
               <div className="h-1 w-20 bg-primary mt-4"></div>
             </div>
           </div>
@@ -124,8 +128,8 @@ export default function HomePage() {
                     <h3 className="text-2xl md:text-3xl font-display font-bold uppercase tracking-widest text-foreground group-hover:text-white transition-colors mt-4">
                       {brand.name}
                     </h3>
-                    <p className="text-sm text-muted-foreground group-hover:text-zinc-300 mt-2 flex items-center">
-                      Shop Parts <ChevronRight className="w-4 h-4" />
+                    <p className="text-sm text-muted-foreground group-hover:text-zinc-300 mt-2 flex items-center gap-1">
+                      {t.home.shopParts} <ChevronRight className="w-4 h-4" />
                     </p>
                   </div>
                 </motion.div>
@@ -140,12 +144,14 @@ export default function HomePage() {
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-end mb-10">
             <div>
-              <h2 className="text-3xl md:text-4xl font-display font-bold uppercase tracking-wider">Top <span className="text-primary">Sellers</span></h2>
+              <h2 className="text-3xl md:text-4xl font-display font-bold uppercase tracking-wider">
+                {t.home.topWord} <span className="text-primary">{t.home.sellersWord}</span>
+              </h2>
               <div className="h-1 w-20 bg-primary mt-4"></div>
             </div>
             <Link href="/catalog">
               <Button variant="outline" className="hidden md:flex">
-                View All Products <ArrowRight className="ml-2 w-4 h-4" />
+                {t.home.viewAllProducts} <ArrowRight className="ms-2 w-4 h-4" />
               </Button>
             </Link>
           </div>
@@ -175,7 +181,7 @@ export default function HomePage() {
           <div className="mt-8 md:hidden">
             <Link href="/catalog">
               <Button className="w-full">
-                View All Products <ArrowRight className="ml-2 w-4 h-4" />
+                {t.home.viewAllProducts} <ArrowRight className="ms-2 w-4 h-4" />
               </Button>
             </Link>
           </div>
@@ -194,10 +200,10 @@ export default function HomePage() {
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute inset-0 z-20 flex flex-col justify-end p-8">
-                <h3 className="text-3xl font-display font-bold uppercase tracking-wider text-white mb-2">Heavy Duty Suspension</h3>
-                <p className="text-zinc-300 mb-6 max-w-sm">Upgrade your ride quality and towing capacity with our premium suspension kits.</p>
+                <h3 className="text-3xl font-display font-bold uppercase tracking-wider text-white mb-2">{t.home.suspensionTitle}</h3>
+                <p className="text-zinc-300 mb-6 max-w-sm">{t.home.suspensionDesc}</p>
                 <Link href="/catalog?category=suspension">
-                  <Button variant="secondary" className="w-fit">Shop Suspension</Button>
+                  <Button variant="secondary" className="w-fit">{t.home.shopSuspension}</Button>
                 </Link>
               </div>
             </div>
@@ -210,10 +216,10 @@ export default function HomePage() {
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute inset-0 z-20 flex flex-col justify-end p-8">
-                <h3 className="text-3xl font-display font-bold uppercase tracking-wider text-white mb-2">Performance Engine</h3>
-                <p className="text-zinc-300 mb-6 max-w-sm">Unlock true American muscle with intakes, exhausts, and tuner components.</p>
+                <h3 className="text-3xl font-display font-bold uppercase tracking-wider text-white mb-2">{t.home.engineTitle}</h3>
+                <p className="text-zinc-300 mb-6 max-w-sm">{t.home.engineDesc}</p>
                 <Link href="/catalog?category=engine">
-                  <Button className="w-fit">Shop Performance</Button>
+                  <Button className="w-fit">{t.home.shopPerformance}</Button>
                 </Link>
               </div>
             </div>

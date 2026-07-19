@@ -1,20 +1,21 @@
 import { useState } from "react";
 import { useGetVehicleMakes, useGetVehicleModels, useGetVehicleYears, useListProducts, getGetVehicleModelsQueryKey, getGetVehicleYearsQueryKey, getListProductsQueryKey } from "@workspace/api-client-react";
 import { Link } from "wouter";
-import { Wrench, ChevronRight, Search } from "lucide-react";
+import { Wrench, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ProductCard } from "@/components/product-card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion, AnimatePresence } from "framer-motion";
+import { useT } from "@/lib/language-context";
 
 export default function VehicleFinderPage() {
+  const t = useT();
   const [selectedMake, setSelectedMake] = useState<string>("");
   const [selectedModel, setSelectedModel] = useState<string>("");
   const [selectedYear, setSelectedYear] = useState<string>("");
   const [hasSearched, setHasSearched] = useState(false);
 
-  // APIs
   const { data: makes, isLoading: loadingMakes } = useGetVehicleMakes();
   
   const { data: modelsData, isLoading: loadingModels } = useGetVehicleModels(
@@ -47,9 +48,7 @@ export default function VehicleFinderPage() {
   };
 
   const handleSearch = () => {
-    if (selectedMake && selectedModel && selectedYear) {
-      setHasSearched(true);
-    }
+    if (selectedMake && selectedModel && selectedYear) setHasSearched(true);
   };
 
   return (
@@ -69,10 +68,10 @@ export default function VehicleFinderPage() {
           <div className="max-w-3xl mx-auto text-center space-y-6">
             <Wrench className="w-12 h-12 text-primary mx-auto mb-4" />
             <h1 className="text-4xl md:text-6xl font-display font-extrabold uppercase tracking-tighter text-white">
-              Find Parts For <span className="text-primary">Your Ride</span>
+              {t.vehicleFinder.titlePart1} <span className="text-primary">{t.vehicleFinder.titlePart2}</span>
             </h1>
             <p className="text-lg text-zinc-400 font-sans">
-              Select your vehicle details below to guarantee perfect fitment on every part you order.
+              {t.vehicleFinder.subtitle}
             </p>
           </div>
 
@@ -80,10 +79,10 @@ export default function VehicleFinderPage() {
           <div className="mt-12 bg-card p-6 md:p-8 rounded-sm shadow-xl border border-border/50 max-w-4xl mx-auto">
             <div className="grid md:grid-cols-4 gap-4">
               <div className="space-y-2">
-                <label className="text-xs font-display font-bold uppercase tracking-wider text-muted-foreground ml-1">Make</label>
+                <label className="text-xs font-display font-bold uppercase tracking-wider text-muted-foreground ms-1">{t.vehicleFinder.make}</label>
                 <Select value={selectedMake} onValueChange={handleMakeChange}>
                   <SelectTrigger className="h-12 bg-background">
-                    <SelectValue placeholder={loadingMakes ? "Loading..." : "Select Make"} />
+                    <SelectValue placeholder={loadingMakes ? t.vehicleFinder.loading : t.vehicleFinder.selectMake} />
                   </SelectTrigger>
                   <SelectContent>
                     {makes?.map(m => (
@@ -94,10 +93,10 @@ export default function VehicleFinderPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-display font-bold uppercase tracking-wider text-muted-foreground ml-1">Model</label>
+                <label className="text-xs font-display font-bold uppercase tracking-wider text-muted-foreground ms-1">{t.vehicleFinder.model}</label>
                 <Select value={selectedModel} onValueChange={handleModelChange} disabled={!selectedMake}>
                   <SelectTrigger className="h-12 bg-background">
-                    <SelectValue placeholder={!selectedMake ? "Select Make First" : loadingModels ? "Loading..." : "Select Model"} />
+                    <SelectValue placeholder={!selectedMake ? t.vehicleFinder.selectMakeFirst : loadingModels ? t.vehicleFinder.loading : t.vehicleFinder.selectModel} />
                   </SelectTrigger>
                   <SelectContent>
                     {modelsData?.map(m => (
@@ -108,10 +107,10 @@ export default function VehicleFinderPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-display font-bold uppercase tracking-wider text-muted-foreground ml-1">Year</label>
+                <label className="text-xs font-display font-bold uppercase tracking-wider text-muted-foreground ms-1">{t.vehicleFinder.year}</label>
                 <Select value={selectedYear} onValueChange={(v) => { setSelectedYear(v); setHasSearched(false); }} disabled={!selectedModel}>
                   <SelectTrigger className="h-12 bg-background">
-                    <SelectValue placeholder={!selectedModel ? "Select Model First" : loadingYears ? "Loading..." : "Select Year"} />
+                    <SelectValue placeholder={!selectedModel ? t.vehicleFinder.selectModelFirst : loadingYears ? t.vehicleFinder.loading : t.vehicleFinder.selectYear} />
                   </SelectTrigger>
                   <SelectContent>
                     {yearsData?.map(y => (
@@ -128,7 +127,7 @@ export default function VehicleFinderPage() {
                   onClick={handleSearch}
                   disabled={!selectedMake || !selectedModel || !selectedYear}
                 >
-                  <Search className="mr-2 h-5 w-5" /> Search
+                  <Search className="me-2 h-5 w-5" /> {t.vehicleFinder.search}
                 </Button>
               </div>
             </div>
@@ -142,8 +141,8 @@ export default function VehicleFinderPage() {
           {!hasSearched ? (
             <div className="text-center py-20 opacity-50 flex flex-col items-center">
               <Wrench className="w-16 h-16 text-muted mb-4" />
-              <h2 className="text-2xl font-display font-bold uppercase tracking-wider text-muted-foreground">Awaiting Input</h2>
-              <p className="max-w-md mx-auto mt-2">Enter your vehicle details above to see guaranteed fit parts.</p>
+              <h2 className="text-2xl font-display font-bold uppercase tracking-wider text-muted-foreground">{t.vehicleFinder.awaitingTitle}</h2>
+              <p className="max-w-md mx-auto mt-2">{t.vehicleFinder.awaitingDesc}</p>
             </div>
           ) : (
             <AnimatePresence mode="wait">
@@ -156,14 +155,14 @@ export default function VehicleFinderPage() {
                 <div className="flex items-center justify-between mb-8 pb-4 border-b border-border">
                   <div>
                     <h2 className="text-2xl md:text-3xl font-display font-bold uppercase tracking-wider">
-                      Parts for <span className="text-primary">{selectedYear} {selectedMake} {selectedModel}</span>
+                      {t.vehicleFinder.partsFor} <span className="text-primary">{selectedYear} {selectedMake} {selectedModel}</span>
                     </h2>
                     <p className="text-muted-foreground mt-1 text-sm">
-                      {loadingResults ? "Searching catalog..." : `${searchResults?.total || 0} guaranteed fit parts found`}
+                      {loadingResults ? t.vehicleFinder.searchingCatalog : t.vehicleFinder.foundParts(searchResults?.total || 0)}
                     </p>
                   </div>
                   <Button variant="outline" size="sm" onClick={() => setHasSearched(false)}>
-                    Change Vehicle
+                    {t.vehicleFinder.changeVehicle}
                   </Button>
                 </div>
 
@@ -192,12 +191,12 @@ export default function VehicleFinderPage() {
                   </div>
                 ) : (
                   <div className="text-center py-20 bg-muted/20 rounded-sm border border-dashed border-border">
-                    <h3 className="text-xl font-display font-semibold uppercase tracking-wider mb-2">No Parts Found</h3>
+                    <h3 className="text-xl font-display font-semibold uppercase tracking-wider mb-2">{t.vehicleFinder.noPartsTitle}</h3>
                     <p className="text-muted-foreground max-w-md mx-auto mb-6">
-                      We couldn't find any specific parts guaranteed to fit a {selectedYear} {selectedMake} {selectedModel}.
+                      {t.vehicleFinder.noPartsDesc(selectedYear, selectedMake, selectedModel)}
                     </p>
                     <Link href="/catalog">
-                      <Button variant="outline">Browse Full Catalog</Button>
+                      <Button variant="outline">{t.vehicleFinder.browseFullCatalog}</Button>
                     </Link>
                   </div>
                 )}

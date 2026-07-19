@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&family=Cairo:wght@400;600;700;900&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @plugin "@tailwindcss/typography";
@@ -131,6 +131,31 @@
     @apply font-display tracking-wide uppercase;
   }
 }
+
+/* ── Arabic language overrides ───────────────────────────────── */
+html.lang-ar {
+  --app-font-sans: 'Cairo', sans-serif;
+  --app-font-display: 'Cairo', sans-serif;
+}
+
+html.lang-ar body,
+html.lang-ar h1,
+html.lang-ar h2,
+html.lang-ar h3,
+html.lang-ar h4,
+html.lang-ar h5,
+html.lang-ar h6 {
+  font-family: 'Cairo', sans-serif;
+  letter-spacing: 0;  /* Cairo has its own spacing built in */
+}
+
+/* RTL badge / badge placement fix (absolute positioning) */
+html[dir="rtl"] .noise-overlay {
+  right: auto;
+  left: 0;
+}
+
+/* ── ──────────────────────────────────────────────────────────── */
 
 .noise-overlay {
   position: fixed;
