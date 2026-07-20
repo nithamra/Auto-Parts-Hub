@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import { format } from "date-fns";
+import { useT } from "@/lib/language-context";
 
 const COLORS = ['hsl(3, 70%, 50%)', 'hsl(210, 50%, 30%)', 'hsl(220, 15%, 30%)', 'hsl(45, 93%, 47%)', 'hsl(160, 84%, 39%)'];
 
@@ -16,6 +17,7 @@ export default function AdminDashboard() {
   const { data: salesData, isLoading: loadingSales } = useGetSalesByCategory();
   const { data: lowStock, isLoading: loadingStock } = useGetLowStockProducts();
   const { data: recentOrders, isLoading: loadingOrders } = useGetRecentOrders();
+  const t = useT();
 
   return (
     <div className="space-y-8">
@@ -23,7 +25,7 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="bg-card border-l-4 border-l-primary">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-display uppercase tracking-wider font-bold text-muted-foreground">Total Revenue</CardTitle>
+            <CardTitle className="text-sm font-display uppercase tracking-wider font-bold text-muted-foreground">{t.admin.stats.totalRevenue}</CardTitle>
             <TrendingUp className="w-4 h-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -38,7 +40,7 @@ export default function AdminDashboard() {
         
         <Card className="bg-card border-l-4 border-l-secondary">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-display uppercase tracking-wider font-bold text-muted-foreground">Orders</CardTitle>
+            <CardTitle className="text-sm font-display uppercase tracking-wider font-bold text-muted-foreground">{t.admin.stats.orders}</CardTitle>
             <ShoppingCart className="w-4 h-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -53,7 +55,7 @@ export default function AdminDashboard() {
         
         <Card className="bg-card border-l-4 border-l-muted-foreground">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-display uppercase tracking-wider font-bold text-muted-foreground">Products</CardTitle>
+            <CardTitle className="text-sm font-display uppercase tracking-wider font-bold text-muted-foreground">{t.admin.stats.products}</CardTitle>
             <Package className="w-4 h-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -65,7 +67,7 @@ export default function AdminDashboard() {
         
         <Card className="bg-card border-l-4 border-l-accent-foreground">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-display uppercase tracking-wider font-bold text-muted-foreground">Customers</CardTitle>
+            <CardTitle className="text-sm font-display uppercase tracking-wider font-bold text-muted-foreground">{t.admin.stats.customers}</CardTitle>
             <Users className="w-4 h-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -80,7 +82,7 @@ export default function AdminDashboard() {
         {/* Sales by Category Chart */}
         <Card className="lg:col-span-1">
           <CardHeader>
-            <CardTitle>Sales by Category</CardTitle>
+            <CardTitle>{t.admin.salesByCategory}</CardTitle>
           </CardHeader>
           <CardContent className="h-[300px] flex items-center justify-center">
             {loadingSales ? <Skeleton className="h-[250px] w-full rounded-full" /> : 
@@ -110,7 +112,7 @@ export default function AdminDashboard() {
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <div className="text-muted-foreground text-center">No sales data available</div>
+                <div className="text-muted-foreground text-center">{t.admin.noSalesData}</div>
             )}
           </CardContent>
         </Card>
@@ -119,10 +121,10 @@ export default function AdminDashboard() {
         <Card className="lg:col-span-2">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="flex items-center gap-2 text-destructive">
-              <AlertTriangle className="w-5 h-5" /> Low Stock Alerts
+              <AlertTriangle className="w-5 h-5" /> {t.admin.lowStockAlerts}
             </CardTitle>
             <Link href="/admin/products" className="text-sm text-primary flex items-center hover:underline">
-              Manage Inventory <ArrowRight className="w-4 h-4 ml-1" />
+              {t.admin.manageInventory} <ArrowRight className="w-4 h-4 ml-1" />
             </Link>
           </CardHeader>
           <CardContent>
@@ -134,9 +136,9 @@ export default function AdminDashboard() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Product</TableHead>
-                    <TableHead>SKU</TableHead>
-                    <TableHead className="text-right">Stock</TableHead>
+                    <TableHead>{t.admin.table.product}</TableHead>
+                      <TableHead>{t.admin.table.sku}</TableHead>
+                      <TableHead className="text-right">{t.admin.table.stock}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -146,7 +148,7 @@ export default function AdminDashboard() {
                       <TableCell className="font-mono text-muted-foreground">{product.sku}</TableCell>
                       <TableCell className="text-right">
                         <Badge variant={product.stock === 0 ? "destructive" : "outline"} className={product.stock > 0 ? "text-amber-500 border-amber-500/50" : ""}>
-                          {product.stock} left
+                          {t.admin.table.stockLeft(product.stock)}
                         </Badge>
                       </TableCell>
                     </TableRow>
@@ -155,7 +157,7 @@ export default function AdminDashboard() {
               </Table>
             ) : (
               <div className="py-8 text-center text-muted-foreground border border-dashed border-border rounded-sm">
-                All products have sufficient stock levels.
+                {t.admin.table.allSufficientStock}
               </div>
             )}
           </CardContent>
@@ -164,10 +166,10 @@ export default function AdminDashboard() {
 
       {/* Recent Orders */}
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Recent Orders</CardTitle>
+          <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>{t.admin.recentOrders}</CardTitle>
           <Link href="/admin/orders" className="text-sm text-primary flex items-center hover:underline">
-            View All <ArrowRight className="w-4 h-4 ml-1" />
+            {t.admin.viewAll} <ArrowRight className="w-4 h-4 ml-1" />
           </Link>
         </CardHeader>
         <CardContent>
@@ -179,11 +181,11 @@ export default function AdminDashboard() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Order #</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Customer</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Total</TableHead>
+                  <TableHead>{t.admin.order.orderNum}</TableHead>
+                  <TableHead>{t.admin.order.date}</TableHead>
+                  <TableHead>{t.admin.order.customer}</TableHead>
+                  <TableHead>{t.admin.order.status}</TableHead>
+                  <TableHead className="text-right">{t.admin.order.total}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -208,7 +210,7 @@ export default function AdminDashboard() {
             </Table>
           ) : (
             <div className="py-8 text-center text-muted-foreground border border-dashed border-border rounded-sm">
-              No recent orders found.
+              {"No recent orders found."}
             </div>
           )}
         </CardContent>

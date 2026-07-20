@@ -2,19 +2,22 @@ import { Link, useLocation } from "wouter";
 import { ShieldAlert, LayoutDashboard, Package, ShoppingCart, Users, LogOut, ArrowLeft, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useT } from "@/lib/language-context";
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
 
+  const t = useT();
+
   const navItems = [
-    { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/admin/products", label: "Products", icon: Package },
-    { href: "/admin/orders", label: "Orders", icon: ShoppingCart },
-    { href: "/admin/transactions", label: "Transactions", icon: CreditCard },
+    { href: "/admin", label: t.admin.nav.dashboard, icon: LayoutDashboard },
+    { href: "/admin/products", label: t.admin.nav.products, icon: Package },
+    { href: "/admin/orders", label: t.admin.nav.orders, icon: ShoppingCart },
+    { href: "/admin/transactions", label: t.admin.nav.transactions, icon: CreditCard },
   ];
 
   const activeLabel = navItems.find(i => i.href === location)?.label
-    || (location.startsWith("/admin/") ? "Admin" : "Admin");
+    || (location.startsWith("/admin/") ? t.admin.title : t.admin.title);
 
   return (
     <div className="min-h-[100dvh] flex flex-col md:flex-row bg-background">
@@ -24,13 +27,13 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
           <div className="flex items-center gap-2 text-destructive">
             <ShieldAlert className="h-6 w-6" />
             <span className="font-display font-bold text-xl tracking-wider">
-              ADMIN <span className="text-foreground">PANEL</span>
+              {t.admin.title} <span className="text-foreground">{t.admin.panel}</span>
             </span>
           </div>
           <Link href="/">
             <Button variant="outline" size="sm" className="w-full justify-start gap-2">
               <ArrowLeft className="h-4 w-4" />
-              Back to Store
+              {t.admin.nav.backToStore}
             </Button>
           </Link>
         </div>
@@ -64,7 +67,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
           <h1 className="font-display font-bold text-xl tracking-wider">{activeLabel}</h1>
           <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
             <LogOut className="h-4 w-4" />
-            Sign Out
+            {t.admin.nav.signOut}
           </Button>
         </header>
         <div className="flex-1 overflow-auto p-6">

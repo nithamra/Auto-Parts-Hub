@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useDebounce } from "@/hooks/use-debounce";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatPrice } from "@/lib/format-price";
+import { useT } from "@/lib/language-context";
 
 const EMPTY_FORM = {
   name: "",
@@ -58,7 +59,7 @@ export default function AdminProducts() {
     const categoryId = parseInt(form.categoryId, 10);
 
     if (!form.name || isNaN(price) || isNaN(stock) || !brandId || !categoryId) {
-      toast({ title: "Missing fields", description: "Please fill in all required fields.", variant: "destructive" });
+      toast({ title: t.admin.productPage.missingFieldsTitle, description: t.admin.productPage.missingFieldsDesc, variant: "destructive" });
       return;
     }
 
@@ -82,7 +83,7 @@ export default function AdminProducts() {
       {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: getListProductsQueryKey() });
-          toast({ title: "Product created", description: `${form.name} has been added.` });
+          toast({ title: t.admin.productPage.productCreated, description: t.admin.productPage.productCreatedDesc(form.name) });
           setForm(EMPTY_FORM);
           setDialogOpen(false);
         },
@@ -104,12 +105,14 @@ export default function AdminProducts() {
         {
           onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: getListProductsQueryKey() });
-            toast({ title: "Product deleted", description: `${name} has been removed.` });
+            toast({ title: t.admin.productPage.productDeleted, description: t.admin.productPage.productDeletedDesc(name) });
           },
         }
       );
     }
   };
+
+  const t = useT();
 
   return (
     <div className="space-y-6">
@@ -118,7 +121,7 @@ export default function AdminProducts() {
         <div className="flex-1 relative max-w-md w-full">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search products by name or SKU…"
+            placeholder={t.admin.productPage.searchPlaceholder}
             className="pl-9"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -135,7 +138,7 @@ export default function AdminProducts() {
           <TableHeader>
             <TableRow>
               <TableHead className="w-16">Image</TableHead>
-              <TableHead>Product</TableHead>
+              <TableHead>{t.admin.table.product}</TableHead>
               <TableHead>Brand</TableHead>
               <TableHead>Price</TableHead>
               <TableHead className="text-center">Stock</TableHead>
@@ -200,8 +203,8 @@ export default function AdminProducts() {
               Page {page} of {productsData.totalPages}
             </span>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1}>Prev</Button>
-              <Button variant="outline" size="sm" onClick={() => setPage((p) => Math.min(productsData.totalPages, p + 1))} disabled={page === productsData.totalPages}>Next</Button>
+              <Button variant="outline" size="sm" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1}>{t.admin.productPage.prev}</Button>
+              <Button variant="outline" size="sm" onClick={() => setPage((p) => Math.min(productsData.totalPages, p + 1))} disabled={page === productsData.totalPages}>{t.admin.productPage.next}</Button>
             </div>
           </div>
         )}
@@ -211,7 +214,7 @@ export default function AdminProducts() {
       <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) setForm(EMPTY_FORM); }}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="font-display uppercase tracking-wider text-xl">Add New Product</DialogTitle>
+            <DialogTitle className="font-display uppercase tracking-wider text-xl">{t.admin.productPage.addNewProductTitle}</DialogTitle>
           </DialogHeader>
 
           <form id="add-product-form" onSubmit={handleSubmit} className="space-y-5 py-2">
@@ -283,9 +286,9 @@ export default function AdminProducts() {
           </form>
 
           <DialogFooter className="gap-2">
-            <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
+            <Button variant="outline" onClick={() => setDialogOpen(false)}>{t.admin.productPage.cancel}</Button>
             <Button form="add-product-form" type="submit" disabled={createProduct.isPending}>
-              {createProduct.isPending ? "Saving…" : "Save Product"}
+              {createProduct.isPending ? t.admin.productPage.saving : t.admin.productPage.saveProduct}
             </Button>
           </DialogFooter>
         </DialogContent>
