@@ -32,7 +32,7 @@ export default function AdminDashboard() {
             {loadingStats ? <Skeleton className="h-8 w-24" /> : (
               <>
                 <div className="text-2xl font-bold font-mono">{formatPrice(stats?.totalRevenue ?? 0)}</div>
-                <p className="text-xs text-muted-foreground mt-1">+{formatPrice(stats?.revenueThisMonth ?? 0)} this month</p>
+                <p className="text-xs text-muted-foreground mt-1">{t.admin.stats.thisMonth(formatPrice(stats?.revenueThisMonth ?? 0))}</p>
               </>
             )}
           </CardContent>
@@ -47,7 +47,7 @@ export default function AdminDashboard() {
             {loadingStats ? <Skeleton className="h-8 w-24" /> : (
               <>
                 <div className="text-2xl font-bold font-mono">{stats?.totalOrders}</div>
-                <p className="text-xs text-muted-foreground mt-1">+{stats?.ordersThisMonth} this month</p>
+                <p className="text-xs text-muted-foreground mt-1">{t.admin.stats.thisMonth(stats?.ordersThisMonth ?? 0)}</p>
               </>
             )}
           </CardContent>
@@ -210,7 +210,7 @@ export default function AdminDashboard() {
             </Table>
           ) : (
             <div className="py-8 text-center text-muted-foreground border border-dashed border-border rounded-sm">
-              {"No recent orders found."}
+              {t.admin.recentOrdersEmpty}
             </div>
           )}
         </CardContent>
