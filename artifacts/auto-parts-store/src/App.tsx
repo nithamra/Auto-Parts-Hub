@@ -29,6 +29,7 @@ import ContactPage from '@/pages/contact';
 import AdminDashboard from '@/pages/admin/dashboard';
 import AdminProducts from '@/pages/admin/products';
 import AdminOrders from '@/pages/admin/orders';
+import AdminTransactions from '@/pages/admin/transactions';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -73,6 +74,9 @@ function Router() {
       </Route>
       <Route path="/admin/orders">
         <AdminLayout><AdminOrders /></AdminLayout>
+      </Route>
+      <Route path="/admin/transactions">
+        <AdminLayout><AdminTransactions /></AdminLayout>
       </Route>
       <Route path="/admin">
         <AdminLayout><AdminDashboard /></AdminLayout>

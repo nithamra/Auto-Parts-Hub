@@ -10,6 +10,7 @@ import vehiclesRouter from "./vehicles";
 import wishlistRouter from "./wishlist";
 import usersRouter from "./users";
 import adminRouter from "./admin";
+import paymentsRouter from "./payments";
 
 const router: IRouter = Router();
 
@@ -24,5 +25,6 @@ router.use(vehiclesRouter);
 router.use(wishlistRouter);
 router.use(usersRouter);
 router.use(adminRouter);
+router.use(paymentsRouter);
 
 export default router;

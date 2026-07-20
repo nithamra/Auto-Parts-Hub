@@ -1,49 +1,64 @@
-# See https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+# ─── Dependencies ─────────────────────────────────────────────
+node_modules/
+.pnpm-store/
+.yarn/
 
-# compiled output
-dist
-tmp
-out-tsc
+# ─── Build outputs ─────────────────────────────────────────────
+dist/
+build/
+.next/
+out/
 *.tsbuildinfo
-.expo
-.expo-shared
 
-# dependencies
-node_modules
+# ─── Environment & secrets ─────────────────────────────────────
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
 
-# IDEs and editors
-/.idea
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
+# ─── Logs ──────────────────────────────────────────────────────
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# IDE - VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+# ─── Database ──────────────────────────────────────────────────
+*.sqlite
+*.sqlite3
+*.db
+drizzle/migrations/meta/*.json
 
-# misc
-/.sass-cache
-/connect.lock
-/coverage
-/libpeerconnection.log
-npm-debug.log
-yarn-error.log
-testem.log
-/typings
-
-# System Files
+# ─── Editor & OS ───────────────────────────────────────────────
 .DS_Store
 Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+*.code-workspace
 
-.cursor/rules/nx-rules.mdc
-.github/instructions/nx.instructions.md
+# ─── Test & coverage ───────────────────────────────────────────
+coverage/
+.nyc_output/
+playwright-report/
+test-results/
 
-# Replit
-.cache/
-.local/
+# ─── Vite & Replit internals ───────────────────────────────────
+.vite/
+.replit.nix
+.upm/
+replit_zip_error_log.txt
+
+# ─── Generated files (do NOT commit — regenerate with orval) ───
+lib/api-client-react/src/generated/
+lib/zod/src/generated/
+
+# ─── Misc ──────────────────────────────────────────────────────
+*.tgz
+*.zip
+.tmp/
+tmp/

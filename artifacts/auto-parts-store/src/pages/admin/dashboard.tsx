@@ -1,6 +1,7 @@
 import { useGetAdminStats, useGetSalesByCategory, useGetLowStockProducts, useGetRecentOrders } from "@workspace/api-client-react";
 import { Link } from "wouter";
-import { DollarSign, ShoppingCart, Package, Users, AlertTriangle, ArrowRight } from "lucide-react";
+import { TrendingUp, ShoppingCart, Package, Users, AlertTriangle, ArrowRight } from "lucide-react";
+import { formatPrice } from "@/lib/format-price";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -23,13 +24,13 @@ export default function AdminDashboard() {
         <Card className="bg-card border-l-4 border-l-primary">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-display uppercase tracking-wider font-bold text-muted-foreground">Total Revenue</CardTitle>
-            <DollarSign className="w-4 h-4 text-muted-foreground" />
+            <TrendingUp className="w-4 h-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             {loadingStats ? <Skeleton className="h-8 w-24" /> : (
               <>
-                <div className="text-2xl font-bold font-mono">${stats?.totalRevenue.toFixed(2)}</div>
-                <p className="text-xs text-muted-foreground mt-1">+${stats?.revenueThisMonth.toFixed(2)} this month</p>
+                <div className="text-2xl font-bold font-mono">{formatPrice(stats?.totalRevenue ?? 0)}</div>
+                <p className="text-xs text-muted-foreground mt-1">+{formatPrice(stats?.revenueThisMonth ?? 0)} this month</p>
               </>
             )}
           </CardContent>
@@ -101,7 +102,7 @@ export default function AdminDashboard() {
                     ))}
                   </Pie>
                   <Tooltip 
-                    formatter={(value: number) => `$${value.toFixed(2)}`}
+                    formatter={(value: number) => formatPrice(value)}
                     contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '0.25rem' }}
                     itemStyle={{ color: 'hsl(var(--foreground))' }}
                   />
@@ -200,7 +201,7 @@ export default function AdminDashboard() {
                         {order.status}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-right font-mono font-medium">${order.total.toFixed(2)}</TableCell>
+                    <TableCell className="text-right font-mono font-medium">{formatPrice(order.total)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

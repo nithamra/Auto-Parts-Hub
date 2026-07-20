@@ -21,3 +21,10 @@ timeoutMs = 20000
 
 [nix]
 channel = "stable-25_05"
+
+[userenv]
+
+[userenv.shared]
+PAYPAL_CLIENT_ID = "Af0Qm0Qq8E4hDss1g0rdu30qA_a6FElLg_aRTygyvtaYlvNY1KSDIahfSlC8DLubJiIhi6ksonHmswP5"
+PAYPAL_MODE = "sandbox"
+VITE_PAYPAL_CLIENT_ID = "Af0Qm0Qq8E4hDss1g0rdu30qA_a6FElLg_aRTygyvtaYlvNY1KSDIahfSlC8DLubJiIhi6ksonHmswP5"
