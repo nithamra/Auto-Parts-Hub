@@ -13,12 +13,15 @@ import { Star, Truck, ShieldCheck, Wrench, Heart, Minus, Plus, ShoppingCart, Che
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { formatPrice } from "@/lib/format-price";
+import { useT } from "@/lib/language-context";
 
 export default function ProductDetailPage() {
   const [match, params] = useRoute("/products/:id");
   const productId = match && params.id ? parseInt(params.id, 10) : null;
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const t = useT();
 
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
@@ -47,7 +50,7 @@ export default function ProductDetailPage() {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: getGetCartQueryKey() });
         toast({
-          title: "Added to cart",
+          title: t.product.addedToCart,
           description: `${quantity}x ${product.name} added to your cart.`,
         });
       }
@@ -187,11 +190,11 @@ export default function ProductDetailPage() {
           
           <div className="flex items-end gap-4 mb-8">
             <span className="text-5xl font-mono font-bold tracking-tight">
-              ${product.price.toFixed(2)}
+              {formatPrice(product.price)}
             </span>
             {product.compareAtPrice && product.compareAtPrice > product.price && (
               <span className="text-xl font-mono text-muted-foreground line-through mb-1">
-                ${product.compareAtPrice.toFixed(2)}
+                {formatPrice(product.compareAtPrice)}
               </span>
             )}
           </div>
@@ -236,7 +239,7 @@ export default function ProductDetailPage() {
                 disabled={product.stock <= 0 || addToCart.isPending}
               >
                 <ShoppingCart className="mr-2 h-5 w-5 group-hover:-rotate-12 transition-transform" />
-                {product.stock > 0 ? "Add to Cart" : "Out of Stock"}
+                {product.stock > 0 ? t.product.addToCart : t.product.outOfStock}
               </Button>
               
               <Button variant="outline" size="icon" className="h-12 w-12 rounded-sm shrink-0">
@@ -248,11 +251,11 @@ export default function ProductDetailPage() {
               {product.stock > 0 ? (
                 <>
                   <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                  <span className="font-medium text-emerald-500">In Stock</span>
-                  <span className="text-muted-foreground">— Usually ships within 24 hours</span>
+                  <span className="font-medium text-emerald-500">{t.product.inStock}</span>
+                  <span className="text-muted-foreground">— {t.product.shipsWithin24}</span>
                 </>
               ) : (
-                <span className="font-medium text-destructive">Currently Out of Stock</span>
+                <span className="font-medium text-destructive">{t.product.outOfStockLong}</span>
               )}
             </div>
           </div>
@@ -264,8 +267,8 @@ export default function ProductDetailPage() {
                 <ShieldCheck className="h-5 w-5" />
               </div>
               <div>
-                <div className="font-display uppercase tracking-wider text-xs font-bold">Warranty</div>
-                <div className="text-sm text-muted-foreground">{product.warranty || "1 Year Limited"}</div>
+                <div className="font-display uppercase tracking-wider text-xs font-bold">{t.product.warranty}</div>
+                <div className="text-sm text-muted-foreground">{product.warranty || t.product.warrantyDefault}</div>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -273,8 +276,8 @@ export default function ProductDetailPage() {
                 <Truck className="h-5 w-5" />
               </div>
               <div>
-                <div className="font-display uppercase tracking-wider text-xs font-bold">Shipping</div>
-                <div className="text-sm text-muted-foreground">Free over $150</div>
+                <div className="font-display uppercase tracking-wider text-xs font-bold">{t.product.shipping}</div>
+                <div className="text-sm text-muted-foreground">{t.product.freeShippingThreshold}</div>
               </div>
             </div>
             <div className="flex items-center gap-3 col-span-2">
@@ -282,8 +285,8 @@ export default function ProductDetailPage() {
                 <Wrench className="h-5 w-5" />
               </div>
               <div>
-                <div className="font-display uppercase tracking-wider text-xs font-bold">Fitment Guarantee</div>
-                <div className="text-sm text-muted-foreground">Guaranteed to fit specified vehicles</div>
+                <div className="font-display uppercase tracking-wider text-xs font-bold">{t.product.fitmentGuarantee}</div>
+                <div className="text-sm text-muted-foreground">{t.product.fitmentGuaranteeDesc}</div>
               </div>
             </div>
           </div>
@@ -294,13 +297,13 @@ export default function ProductDetailPage() {
       <Tabs defaultValue="specs" className="w-full">
         <TabsList className="w-full justify-start border-b border-border bg-transparent h-auto p-0 rounded-none overflow-x-auto flex-nowrap">
           <TabsTrigger value="specs" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none py-4 px-6">
-            Specifications
+            {t.product.tabSpecs}
           </TabsTrigger>
           <TabsTrigger value="fitment" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none py-4 px-6">
-            Vehicle Fitment
+            {t.product.tabFitment}
           </TabsTrigger>
           <TabsTrigger value="reviews" id="reviews" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none py-4 px-6">
-            Reviews ({product.reviewCount})
+            {t.product.tabReviews} ({product.reviewCount})
           </TabsTrigger>
         </TabsList>
         
@@ -329,7 +332,7 @@ export default function ProductDetailPage() {
         
         <TabsContent value="fitment" className="py-8 animate-in fade-in-50 duration-500">
           <div className="max-w-4xl">
-            <h3 className="font-display text-xl font-bold uppercase tracking-wider mb-6">Compatible Vehicles</h3>
+            <h3 className="font-display text-xl font-bold uppercase tracking-wider mb-6">{t.product.compatibleVehicles}</h3>
             {product.compatibility && product.compatibility.length > 0 ? (
               <ul className="grid sm:grid-cols-2 gap-3">
                 {product.compatibility.map((vehicle, idx) => (
@@ -403,7 +406,7 @@ export default function ProductDetailPage() {
             {/* Write a Review */}
             <div className="md:col-span-5 lg:col-span-4">
               <div className="bg-card border border-border p-6 rounded-sm sticky top-24">
-                <h3 className="font-display font-bold text-xl uppercase tracking-wider mb-6">Write a Review</h3>
+                <h3 className="font-display font-bold text-xl uppercase tracking-wider mb-6">{t.product.writeReview}</h3>
                 <form onSubmit={handleReviewSubmit} className="space-y-4">
                   <div className="space-y-2">
                     <Label>Rating</Label>

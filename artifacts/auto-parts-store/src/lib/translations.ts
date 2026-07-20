@@ -217,6 +217,27 @@ const t = {
       addedDesc: (name: string) => `${name} has been added to your cart.`,
     },
 
+    // ── Product Detail ────────────────────────────────────────────
+    product: {
+      addToCart: "Add to Cart",
+      outOfStock: "Out of Stock",
+      outOfStockLong: "Currently Out of Stock",
+      addedToCart: "Added to cart",
+      inStock: "In Stock",
+      shipsWithin24: "Usually ships within 24 hours",
+      warranty: "Warranty",
+      warrantyDefault: "1 Year Limited",
+      shipping: "Shipping",
+      freeShippingThreshold: "Free on orders over ⃁500",
+      fitmentGuarantee: "Fitment Guarantee",
+      fitmentGuaranteeDesc: "Guaranteed to fit specified vehicles",
+      tabSpecs: "Specifications",
+      tabFitment: "Vehicle Fitment",
+      tabReviews: "Reviews",
+      compatibleVehicles: "Compatible Vehicles",
+      writeReview: "Write a Review",
+    },
+
     // ── Not Found ─────────────────────────────────────────────────
     notFound: {
       title: "Part Not Found",
@@ -434,6 +455,27 @@ const t = {
       addToCart: "أضف للعربة",
       addedToCart: "تمت الإضافة للعربة",
       addedDesc: (name: string) => `تمت إضافة ${name} إلى عربتك.`,
+    },
+
+    // ── Product Detail ────────────────────────────────────────────
+    product: {
+      addToCart: "أضف للعربة",
+      outOfStock: "غير متوفر",
+      outOfStockLong: "غير متوفر حالياً",
+      addedToCart: "تمت الإضافة للعربة",
+      inStock: "متوفر",
+      shipsWithin24: "يُشحن عادةً خلال 24 ساعة",
+      warranty: "الضمان",
+      warrantyDefault: "ضمان محدود سنة واحدة",
+      shipping: "الشحن",
+      freeShippingThreshold: "مجاني للطلبات فوق ⃁500",
+      fitmentGuarantee: "ضمان التوافق",
+      fitmentGuaranteeDesc: "مضمون التوافق مع المركبات المحددة",
+      tabSpecs: "المواصفات",
+      tabFitment: "توافق المركبة",
+      tabReviews: "التقييمات",
+      compatibleVehicles: "المركبات المتوافقة",
+      writeReview: "اكتب تقييماً",
     },
 
     notFound: {
