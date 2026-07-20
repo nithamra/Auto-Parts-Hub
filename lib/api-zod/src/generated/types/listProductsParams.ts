@@ -47,4 +47,20 @@ vehicleModel?: string | null;
  * @nullable
  */
 vehicleYear?: number | null;
+/**
+ * @nullable
+ */
+categorySlug?: string | null;
+/**
+ * @nullable
+ */
+isOem?: boolean | null;
+/**
+ * @nullable
+ */
+engine?: string | null;
+/**
+ * @nullable
+ */
+hasWarranty?: boolean | null;
 };

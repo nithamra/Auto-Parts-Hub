@@ -26,4 +26,5 @@ export interface ProductInput {
   /** @nullable */
   manufacturer?: string | null;
   isFeatured?: boolean;
+  isOem?: boolean;
 }

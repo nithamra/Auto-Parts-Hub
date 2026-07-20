@@ -49,6 +49,7 @@ export interface Product {
   /** @nullable */
   manufacturer?: string | null;
   isFeatured: boolean;
+  isOem: boolean;
   createdAt: string;
 }
 
@@ -95,6 +96,7 @@ export interface ProductInput {
   /** @nullable */
   manufacturer?: string | null;
   isFeatured?: boolean;
+  isOem?: boolean;
 }
 
 export interface ProductUpdate {
@@ -113,6 +115,7 @@ export interface ProductUpdate {
   /** @nullable */
   warranty?: string | null;
   isFeatured?: boolean;
+  isOem?: boolean;
 }
 
 export interface Category {
@@ -123,7 +126,25 @@ export interface Category {
   description?: string | null;
   /** @nullable */
   imageUrl?: string | null;
+  /** @nullable */
+  parentId?: number | null;
+  sortOrder: number;
   productCount: number;
+}
+
+export interface CategoryNode {
+  id: number;
+  name: string;
+  slug: string;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  imageUrl?: string | null;
+  /** @nullable */
+  parentId?: number | null;
+  sortOrder: number;
+  productCount: number;
+  children: CategoryNode[];
 }
 
 export interface CategoryInput {
@@ -363,6 +384,22 @@ vehicleModel?: string | null;
  * @nullable
  */
 vehicleYear?: number | null;
+/**
+ * @nullable
+ */
+categorySlug?: string | null;
+/**
+ * @nullable
+ */
+isOem?: boolean | null;
+/**
+ * @nullable
+ */
+engine?: string | null;
+/**
+ * @nullable
+ */
+hasWarranty?: boolean | null;
 };
 
 export type ListProductsSortBy = typeof ListProductsSortBy[keyof typeof ListProductsSortBy];

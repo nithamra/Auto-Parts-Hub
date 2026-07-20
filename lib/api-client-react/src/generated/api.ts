@@ -29,6 +29,7 @@ import type {
   CartItemUpdate,
   Category,
   CategoryInput,
+  CategoryNode,
   CategorySales,
   ErrorResponse,
   GetVehicleModelsParams,
@@ -609,6 +610,83 @@ export const useDeleteProduct = <TError = ErrorType<unknown>,
       > => {
       return useMutation(getDeleteProductMutationOptions(options));
     }
+
+export const getGetCategoryTreeUrl = () => {
+
+
+
+
+  return `/api/categories/tree`
+}
+
+/**
+ * @summary Get full category tree (nested)
+ */
+export const getCategoryTree = async ( options?: RequestInit): Promise<CategoryNode[]> => {
+
+  return customFetch<CategoryNode[]>(getGetCategoryTreeUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetCategoryTreeQueryKey = () => {
+    return [
+    `/api/categories/tree`
+    ] as const;
+    }
+
+
+export const getGetCategoryTreeQueryOptions = <TData = Awaited<ReturnType<typeof getCategoryTree>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCategoryTree>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCategoryTreeQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCategoryTree>>> = ({ signal }) => getCategoryTree({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCategoryTree>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetCategoryTreeQueryResult = NonNullable<Awaited<ReturnType<typeof getCategoryTree>>>
+export type GetCategoryTreeQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get full category tree (nested)
+ */
+
+export function useGetCategoryTree<TData = Awaited<ReturnType<typeof getCategoryTree>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCategoryTree>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetCategoryTreeQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
 
 export const getListCategoriesUrl = () => {
 

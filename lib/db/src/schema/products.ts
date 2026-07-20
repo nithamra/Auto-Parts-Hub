@@ -21,6 +21,7 @@ export const productsTable = pgTable("products", {
   warranty: text("warranty"),
   manufacturer: text("manufacturer"),
   isFeatured: boolean("is_featured").default(false).notNull(),
+  isOem: boolean("is_oem").default(false).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

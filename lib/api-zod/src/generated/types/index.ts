@@ -16,6 +16,7 @@ export * from './cartItemInput';
 export * from './cartItemUpdate';
 export * from './category';
 export * from './categoryInput';
+export * from './categoryNode';
 export * from './categorySales';
 export * from './errorResponse';
 export * from './getVehicleModelsParams';

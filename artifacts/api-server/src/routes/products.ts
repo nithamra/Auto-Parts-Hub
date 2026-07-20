@@ -6,9 +6,34 @@ import {
   brandsTable,
   reviewsTable,
 } from "@workspace/db";
-import { eq, and, gte, lte, ilike, sql, desc, asc } from "drizzle-orm";
+import { eq, and, gte, lte, ilike, sql, desc, asc, inArray } from "drizzle-orm";
 
 const router = Router();
+
+// Helper: given a category slug, return an array of all descendant category IDs (inclusive)
+async function getCategoryIdsBySlugs(slugOrId: string): Promise<number[]> {
+  // Try to find the category by slug
+  const root = await db
+    .select({ id: categoriesTable.id })
+    .from(categoriesTable)
+    .where(eq(categoriesTable.slug, slugOrId))
+    .limit(1);
+
+  if (root.length === 0) return [];
+
+  // Use recursive CTE to get all descendant IDs
+  const result = await db.execute(sql`
+    WITH RECURSIVE cat_tree AS (
+      SELECT id FROM categories WHERE id = ${root[0].id}
+      UNION ALL
+      SELECT c.id FROM categories c
+      INNER JOIN cat_tree ct ON c.parent_id = ct.id
+    )
+    SELECT id FROM cat_tree
+  `);
+
+  return (result.rows as { id: number }[]).map((r) => r.id);
+}
 
 // GET /products
 router.get("/products", async (req, res) => {
@@ -17,6 +42,7 @@ router.get("/products", async (req, res) => {
       page = "1",
       limit = "12",
       categoryId,
+      categorySlug,
       brandId,
       search,
       minPrice,
@@ -26,6 +52,9 @@ router.get("/products", async (req, res) => {
       vehicleMake,
       vehicleModel,
       vehicleYear,
+      engine,
+      isOem,
+      hasWarranty,
     } = req.query as Record<string, string>;
 
     const pageNum = Math.max(1, parseInt(page) || 1);
@@ -34,13 +63,24 @@ router.get("/products", async (req, res) => {
 
     const conditions: ReturnType<typeof eq>[] = [];
 
-    const categoryIdNum = categoryId ? parseInt(categoryId) : NaN;
+    // Category filtering: categorySlug takes priority, then categoryId
+    if (categorySlug) {
+      const catIds = await getCategoryIdsBySlugs(categorySlug);
+      if (catIds.length > 0) {
+        conditions.push(inArray(productsTable.categoryId, catIds) as ReturnType<typeof eq>);
+      }
+    } else {
+      const categoryIdNum = categoryId ? parseInt(categoryId) : NaN;
+      if (!isNaN(categoryIdNum)) conditions.push(eq(productsTable.categoryId, categoryIdNum));
+    }
+
     const brandIdNum = brandId ? parseInt(brandId) : NaN;
-    if (!isNaN(categoryIdNum)) conditions.push(eq(productsTable.categoryId, categoryIdNum));
     if (!isNaN(brandIdNum)) conditions.push(eq(productsTable.brandId, brandIdNum));
     if (minPrice && !isNaN(parseFloat(minPrice))) conditions.push(gte(productsTable.price, minPrice));
     if (maxPrice && !isNaN(parseFloat(maxPrice))) conditions.push(lte(productsTable.price, maxPrice));
     if (inStock === "true") conditions.push(gte(productsTable.stock, sql`1`));
+    if (isOem === "true") conditions.push(eq(productsTable.isOem, true));
+    if (isOem === "false") conditions.push(eq(productsTable.isOem, false));
 
     // Build base query with joins
     const baseQuery = db
@@ -54,14 +94,12 @@ router.get("/products", async (req, res) => {
       .leftJoin(brandsTable, eq(productsTable.brandId, brandsTable.id));
 
     // Apply WHERE conditions
-    let query = conditions.length > 0
-      ? baseQuery.where(and(...conditions))
-      : baseQuery;
-
-    // Handle search separately (ilike doesn't return right type for our conditions array)
     let rows;
-    if (search) {
-      const withSearch = db
+    const hasSearch = !!search;
+    const searchCondition = hasSearch ? ilike(productsTable.name, `%${search}%`) : null;
+
+    if (hasSearch && searchCondition) {
+      rows = await db
         .select({
           product: productsTable,
           categoryName: categoriesTable.name,
@@ -70,18 +108,15 @@ router.get("/products", async (req, res) => {
         .from(productsTable)
         .leftJoin(categoriesTable, eq(productsTable.categoryId, categoriesTable.id))
         .leftJoin(brandsTable, eq(productsTable.brandId, brandsTable.id))
-        .where(
-          conditions.length > 0
-            ? and(ilike(productsTable.name, `%${search}%`), ...conditions)
-            : ilike(productsTable.name, `%${search}%`)
-        );
-      rows = await withSearch;
+        .where(conditions.length > 0 ? and(searchCondition, ...conditions) : searchCondition);
+    } else if (conditions.length > 0) {
+      rows = await baseQuery.where(and(...conditions));
     } else {
-      rows = await query;
+      rows = await baseQuery;
     }
 
-    // Vehicle compatibility filter (in-memory since it's JSONB)
-    if (vehicleMake || vehicleModel || vehicleYear) {
+    // In-memory filters (JSONB fields)
+    if (vehicleMake || vehicleModel || vehicleYear || engine) {
       rows = rows.filter((r) => {
         const compat = r.product.compatibility as string[];
         if (!compat || compat.length === 0) return false;
@@ -89,8 +124,14 @@ router.get("/products", async (req, res) => {
         if (vehicleMake && !compatStr.includes(vehicleMake.toLowerCase())) return false;
         if (vehicleModel && !compatStr.includes(vehicleModel.toLowerCase())) return false;
         if (vehicleYear && !compatStr.includes(vehicleYear)) return false;
+        if (engine && !compatStr.includes(engine.toLowerCase())) return false;
         return true;
       });
+    }
+
+    // Warranty filter (in-memory)
+    if (hasWarranty === "true") {
+      rows = rows.filter((r) => !!r.product.warranty && r.product.warranty.trim() !== "");
     }
 
     const total = rows.length;

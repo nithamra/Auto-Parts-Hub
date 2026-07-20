@@ -23,4 +23,5 @@ export interface ProductUpdate {
   /** @nullable */
   warranty?: string | null;
   isFeatured?: boolean;
+  isOem?: boolean;
 }

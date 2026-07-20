@@ -31,5 +31,6 @@ export interface Product {
   /** @nullable */
   manufacturer?: string | null;
   isFeatured: boolean;
+  isOem: boolean;
   createdAt: string;
 }

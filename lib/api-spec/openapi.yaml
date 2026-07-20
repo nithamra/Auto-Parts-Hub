@@ -91,6 +91,18 @@ paths:
         - name: vehicleYear
           in: query
           schema: { type: ["integer", "null"] }
+        - name: categorySlug
+          in: query
+          schema: { type: ["string", "null"] }
+        - name: isOem
+          in: query
+          schema: { type: ["boolean", "null"] }
+        - name: engine
+          in: query
+          schema: { type: ["string", "null"] }
+        - name: hasWarranty
+          in: query
+          schema: { type: ["boolean", "null"] }
       responses:
         "200":
           description: List of products
@@ -193,6 +205,21 @@ paths:
           description: Deleted
 
   # ─── Categories ───────────────────────────────────────────────────────────
+  /categories/tree:
+    get:
+      operationId: getCategoryTree
+      tags: [categories]
+      summary: Get full category tree (nested)
+      responses:
+        "200":
+          description: Category tree
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CategoryNode"
+
   /categories:
     get:
       operationId: listCategories
@@ -789,9 +816,10 @@ components:
         warranty: { type: ["string", "null"] }
         manufacturer: { type: ["string", "null"] }
         isFeatured: { type: boolean }
+        isOem: { type: boolean }
         createdAt: { type: string }
       required:
-        [id, sku, name, description, price, imageUrl, images, categoryId, categoryName, brandId, brandName, stock, rating, reviewCount, compatibility, isFeatured, createdAt]
+        [id, sku, name, description, price, imageUrl, images, categoryId, categoryName, brandId, brandName, stock, rating, reviewCount, compatibility, isFeatured, isOem, createdAt]
 
     ProductDetail:
       allOf:
@@ -836,6 +864,7 @@ components:
         warranty: { type: ["string", "null"] }
         manufacturer: { type: ["string", "null"] }
         isFeatured: { type: boolean }
+        isOem: { type: boolean }
       required: [sku, name, description, price, imageUrl, categoryId, brandId, stock]
 
     ProductUpdate:
@@ -855,6 +884,7 @@ components:
           $ref: "#/components/schemas/ProductSpecs"
         warranty: { type: ["string", "null"] }
         isFeatured: { type: boolean }
+        isOem: { type: boolean }
 
     # ─── Categories ──────────────────────────────────────────────────────────
     Category:
@@ -865,8 +895,27 @@ components:
         slug: { type: string }
         description: { type: ["string", "null"] }
         imageUrl: { type: ["string", "null"] }
+        parentId: { type: ["integer", "null"] }
+        sortOrder: { type: integer }
         productCount: { type: integer }
-      required: [id, name, slug, productCount]
+      required: [id, name, slug, sortOrder, productCount]
+
+    CategoryNode:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        slug: { type: string }
+        description: { type: ["string", "null"] }
+        imageUrl: { type: ["string", "null"] }
+        parentId: { type: ["integer", "null"] }
+        sortOrder: { type: integer }
+        productCount: { type: integer }
+        children:
+          type: array
+          items:
+            $ref: "#/components/schemas/CategoryNode"
+      required: [id, name, slug, sortOrder, productCount, children]
 
     CategoryInput:
       type: object

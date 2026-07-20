@@ -35,7 +35,11 @@ export const ListProductsQueryParams = zod.object({
   "sortBy": zod.enum(['name', 'price_asc', 'price_desc', 'rating', 'newest']).default(listProductsQuerySortByDefault),
   "vehicleMake": zod.coerce.string().nullish(),
   "vehicleModel": zod.coerce.string().nullish(),
-  "vehicleYear": zod.coerce.number().nullish()
+  "vehicleYear": zod.coerce.number().nullish(),
+  "categorySlug": zod.coerce.string().nullish(),
+  "isOem": zod.coerce.boolean().nullish(),
+  "engine": zod.coerce.string().nullish(),
+  "hasWarranty": zod.coerce.boolean().nullish()
 })
 
 export const ListProductsResponse = zod.object({
@@ -66,6 +70,7 @@ export const ListProductsResponse = zod.object({
   "warranty": zod.string().nullish(),
   "manufacturer": zod.string().nullish(),
   "isFeatured": zod.boolean(),
+  "isOem": zod.boolean(),
   "createdAt": zod.string()
 })),
   "total": zod.number(),
@@ -99,7 +104,8 @@ export const CreateProductBody = zod.object({
 }).optional(),
   "warranty": zod.string().nullish(),
   "manufacturer": zod.string().nullish(),
-  "isFeatured": zod.boolean().optional()
+  "isFeatured": zod.boolean().optional(),
+  "isOem": zod.boolean().optional()
 })
 
 export const CreateProductResponse = zod.object({
@@ -129,6 +135,7 @@ export const CreateProductResponse = zod.object({
   "warranty": zod.string().nullish(),
   "manufacturer": zod.string().nullish(),
   "isFeatured": zod.boolean(),
+  "isOem": zod.boolean(),
   "createdAt": zod.string()
 })
 
@@ -163,6 +170,7 @@ export const GetFeaturedProductsResponseItem = zod.object({
   "warranty": zod.string().nullish(),
   "manufacturer": zod.string().nullish(),
   "isFeatured": zod.boolean(),
+  "isOem": zod.boolean(),
   "createdAt": zod.string()
 })
 export const GetFeaturedProductsResponse = zod.array(GetFeaturedProductsResponseItem)
@@ -202,6 +210,7 @@ export const GetProductResponse = zod.object({
   "warranty": zod.string().nullish(),
   "manufacturer": zod.string().nullish(),
   "isFeatured": zod.boolean(),
+  "isOem": zod.boolean(),
   "createdAt": zod.string()
 }).and(zod.object({
   "reviews": zod.array(zod.object({
@@ -244,7 +253,8 @@ export const UpdateProductBody = zod.object({
   "fitment": zod.string().optional()
 }).optional(),
   "warranty": zod.string().nullish(),
-  "isFeatured": zod.boolean().optional()
+  "isFeatured": zod.boolean().optional(),
+  "isOem": zod.boolean().optional()
 })
 
 export const UpdateProductResponse = zod.object({
@@ -274,6 +284,7 @@ export const UpdateProductResponse = zod.object({
   "warranty": zod.string().nullish(),
   "manufacturer": zod.string().nullish(),
   "isFeatured": zod.boolean(),
+  "isOem": zod.boolean(),
   "createdAt": zod.string()
 })
 
@@ -289,6 +300,23 @@ export const DeleteProductResponse = zod.void()
 
 
 /**
+ * @summary Get full category tree (nested)
+ */
+export const GetCategoryTreeResponseItem = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "slug": zod.string(),
+  "description": zod.string().nullish(),
+  "imageUrl": zod.string().nullish(),
+  "parentId": zod.number().nullish(),
+  "sortOrder": zod.number(),
+  "productCount": zod.number(),
+  "children": zod.array(zod.unknown())
+})
+export const GetCategoryTreeResponse = zod.array(GetCategoryTreeResponseItem)
+
+
+/**
  * @summary List all categories
  */
 export const ListCategoriesResponseItem = zod.object({
@@ -297,6 +325,8 @@ export const ListCategoriesResponseItem = zod.object({
   "slug": zod.string(),
   "description": zod.string().nullish(),
   "imageUrl": zod.string().nullish(),
+  "parentId": zod.number().nullish(),
+  "sortOrder": zod.number(),
   "productCount": zod.number()
 })
 export const ListCategoriesResponse = zod.array(ListCategoriesResponseItem)
@@ -318,6 +348,8 @@ export const CreateCategoryResponse = zod.object({
   "slug": zod.string(),
   "description": zod.string().nullish(),
   "imageUrl": zod.string().nullish(),
+  "parentId": zod.number().nullish(),
+  "sortOrder": zod.number(),
   "productCount": zod.number()
 })
 
@@ -738,6 +770,7 @@ export const GetWishlistResponseItem = zod.object({
   "warranty": zod.string().nullish(),
   "manufacturer": zod.string().nullish(),
   "isFeatured": zod.boolean(),
+  "isOem": zod.boolean(),
   "createdAt": zod.string()
 })
 export const GetWishlistResponse = zod.array(GetWishlistResponseItem)
@@ -777,6 +810,7 @@ export const AddToWishlistResponseItem = zod.object({
   "warranty": zod.string().nullish(),
   "manufacturer": zod.string().nullish(),
   "isFeatured": zod.boolean(),
+  "isOem": zod.boolean(),
   "createdAt": zod.string()
 })
 export const AddToWishlistResponse = zod.array(AddToWishlistResponseItem)
@@ -816,6 +850,7 @@ export const RemoveFromWishlistResponseItem = zod.object({
   "warranty": zod.string().nullish(),
   "manufacturer": zod.string().nullish(),
   "isFeatured": zod.boolean(),
+  "isOem": zod.boolean(),
   "createdAt": zod.string()
 })
 export const RemoveFromWishlistResponse = zod.array(RemoveFromWishlistResponseItem)
@@ -945,6 +980,7 @@ export const GetLowStockProductsResponseItem = zod.object({
   "warranty": zod.string().nullish(),
   "manufacturer": zod.string().nullish(),
   "isFeatured": zod.boolean(),
+  "isOem": zod.boolean(),
   "createdAt": zod.string()
 })
 export const GetLowStockProductsResponse = zod.array(GetLowStockProductsResponseItem)

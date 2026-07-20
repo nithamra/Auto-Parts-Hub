@@ -6,7 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface Category {
+export interface CategoryNode {
   id: number;
   name: string;
   slug: string;
@@ -18,4 +18,5 @@ export interface Category {
   parentId?: number | null;
   sortOrder: number;
   productCount: number;
+  children: CategoryNode[];
 }
